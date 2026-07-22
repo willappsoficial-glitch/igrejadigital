@@ -641,3 +641,71 @@ function repetirEscalaAnterior() {
     document.getElementById('previewEscala').scrollIntoView({ behavior: 'smooth' });
     showToast("Escala copiada! Você pode apagar eventos indesejados no 'X' antes de publicar.");
 }
+
+
+// Variável global para armazenar a lista na memória do celular
+let strDadosMembrosDept = "[]"; 
+
+// 1. Modifique a sua função carregarDados() existente para incluir o download dessa lista:
+async function carregarDados() {
+    // ... os outros downloads já existentes continuam aqui ...
+
+    // NOVO: Faz o download silencioso dos membros dos departamentos
+    const membrosDept = await fetchData('getMembrosDepartamentos');
+    strDadosMembrosDept = JSON.stringify(membrosDept);
+
+    if (typeof verificarNotificacoes === 'function') {
+        verificarNotificacoes();
+    }
+}
+
+// 2. Adicione estas duas novas funções no final do arquivo:
+function abrirDetalhesDept(nomeDept) {
+    // Altera o título da janela
+    document.getElementById('tituloDept').innerText = nomeDept;
+    
+    // Mostra a tela por cima de tudo
+    document.getElementById('viewDeptDetalhes').classList.remove('hidden');
+    
+    const container = document.getElementById('listaMembrosDept');
+    container.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p>Buscando membros...</p></div>';
+
+    // Lê a lista da memória do celular
+    const todosMembros = JSON.parse(strDadosMembrosDept || "[]");
+    
+    // Filtra apenas os irmãos que pertencem ao departamento clicado
+    const membrosFiltrados = todosMembros.filter(m => m.departamento === nomeDept);
+
+    if(membrosFiltrados.length === 0) {
+        container.innerHTML = `<p class="text-center text-muted mt-4">Nenhum membro cadastrado neste departamento ainda.</p>`;
+        return;
+    }
+
+    // Desenha os cards dos irmãos na tela
+    let html = '';
+    membrosFiltrados.forEach(m => {
+        let btnZap = '';
+        if(m.telefone) {
+            let msgText = encodeURIComponent(`A Paz do Senhor, ${m.nome}!`);
+            btnZap = `<a href="https://wa.me/55${m.telefone}?text=${msgText}" target="_blank" class="icon-btn" style="color: #25d366; background: rgba(37, 211, 102, 0.1); padding: 10px; border-radius: 50%;">
+                        <span class="material-icons-round">whatsapp</span>
+                      </a>`;
+        }
+
+        html += `
+            <div class="app-card" style="display: flex; align-items: center; gap: 15px; padding: 12px 15px;">
+                <img src="${m.foto}" alt="${m.nome}" style="width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border);">
+                <div style="flex: 1;">
+                    <strong style="font-size: 1.05rem; display: block; color: var(--text-main); margin-bottom: 2px;">${m.nome}</strong>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); background: var(--bg-base); padding: 3px 8px; border-radius: 10px;">${nomeDept}</span>
+                </div>
+                ${btnZap}
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+function fecharDetalhesDept() {
+    document.getElementById('viewDeptDetalhes').classList.add('hidden');
+}
