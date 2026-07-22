@@ -15,6 +15,7 @@
     <meta name="theme-color" content="#003366">
 </head>
 <body>
+    <!-- BANNER DE INSTALAÇÃO (PWA) -->
     <div id="installBanner" class="install-banner hidden">
         <div class="install-banner-content">
             <img src="logo.png" alt="Logo" class="install-logo">
@@ -27,6 +28,7 @@
         <button id="closeInstallBtn" class="icon-btn" onclick="fecharBannerInstalacao()"><span class="material-icons-round">close</span></button>
     </div>
 
+    <!-- CABEÇALHO -->
     <header class="topbar">
         <div class="logo-area">
             <img src="logo.png" alt="Logo Igreja" class="logo-img"> 
@@ -43,6 +45,7 @@
         </div>
     </header>
 
+    <!-- TELA DE LOGIN DO MEMBRO -->
     <section id="loginSection" class="view-section active view-center">
         <div class="auth-card">
             <div class="auth-header">
@@ -67,6 +70,7 @@
         </div>
     </section>
 
+    <!-- ÁREA PRINCIPAL DO APP -->
     <main id="memberArea" class="hidden">
         
         <!-- ABA 1: AGENDA -->
@@ -75,7 +79,6 @@
                 <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
                     <h2 style="display: flex; align-items: center; gap: 8px;"><span class="material-icons-round text-primary">calendar_month</span> Agenda</h2>
                     <div style="display: flex; gap: 5px;">
-                        <!-- Botão de Imprimir -->
                         <button onclick="window.print()" class="icon-btn" style="color: var(--primary); background: var(--bg-base);" title="Imprimir Escala">
                             <span class="material-icons-round">print</span>
                         </button>
@@ -97,7 +100,7 @@
                 <div class="cards-list" id="tabelaEscalasBody">
                     <div class="loading-spinner">
                         <div class="spinner"></div>
-                        <p>Buscando avisos...</p>
+                        <p>Buscando agenda...</p>
                     </div>
                 </div>
             </div>
@@ -130,7 +133,6 @@
                 </div>
                 <div class="cards-list">
                     
-                    <!-- Departamento Infantil -->
                     <div class="app-card dept-card" onclick="abrirDetalhesDept('Infantil')">
                         <img src="foto-infantil.jpg" alt="Líder Infantil" class="lider-img" onerror="this.src='https://ui-avatars.com/api/?name=Infantil&background=00a8e8&color=fff'">
                         <div class="dept-info">
@@ -139,7 +141,6 @@
                         </div>
                     </div>
 
-                    <!-- Departamento de Senhoras -->
                     <div class="app-card dept-card" onclick="abrirDetalhesDept('Senhoras')">
                         <img src="foto-senhoras.jpg" alt="Líder Senhoras" class="lider-img" onerror="this.src='https://ui-avatars.com/api/?name=Senhoras&background=00a8e8&color=fff'">
                         <div class="dept-info">
@@ -148,7 +149,6 @@
                         </div>
                     </div>
 
-                    <!-- Departamento de Senhores -->
                     <div class="app-card dept-card" onclick="abrirDetalhesDept('Senhores')">
                         <img src="foto-senhores.jpg" alt="Líder Senhores" class="lider-img" onerror="this.src='https://ui-avatars.com/api/?name=Senhores&background=00a8e8&color=fff'">
                         <div class="dept-info">
@@ -157,7 +157,6 @@
                         </div>
                     </div>
 
-                    <!-- Departamento de Jovens -->
                     <div class="app-card dept-card" onclick="abrirDetalhesDept('Jovens')">
                         <img src="foto-jovens.jpg" alt="Líder Jovens" class="lider-img" onerror="this.src='https://ui-avatars.com/api/?name=Jovens&background=00a8e8&color=fff'">
                         <div class="dept-info">
@@ -177,7 +176,6 @@
                     <h2><span class="material-icons-round text-primary">history_edu</span> Nossa História</h2>
                 </div>
                 <div class="app-card">
-                    <!-- Foto da Igreja Antiga / Construção / Evento Histórico -->
                     <img src="foto-igreja.jpg" alt="História da Igreja" style="width: 100%; border-radius: var(--radius-md); margin-bottom: 15px; object-fit: cover; max-height: 250px; background: var(--bg-base);">
                     
                     <h3 style="color: var(--primary); margin-bottom: 10px;">Como Tudo Começou</h3>
@@ -189,10 +187,17 @@
                         Hoje, a Igreja Digital continua seu legado de expandir o Reino, abraçando a comunidade e levando salvação a quem precisa, utilizando até mesmo a tecnologia para conectar nosso povo.
                     </p>
                 </div>
+
+                <!-- Botão Adicionado: Abre o modal do Pix do Desenvolvedor -->
+                <div style="text-align: center; margin-top: 25px; margin-bottom: 15px;">
+                    <button onclick="abrirModalPix()" class="btn-outline-primary" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 20px; padding: 10px 20px;">
+                        <span class="material-icons-round" style="color: var(--accent-alt);">volunteer_activism</span> Apoiar o Desenvolvedor
+                    </button>
+                </div>
             </div>
         </section>
 
-        <!-- NAVEGAÇÃO INFERIOR ATUALIZADA -->
+        <!-- NAVEGAÇÃO INFERIOR -->
         <nav class="bottom-nav">
             <button class="nav-item active" onclick="switchTab('tabAgenda', this)">
                 <span class="material-icons-round">event_note</span><span>Escalas</span>
@@ -222,6 +227,7 @@
         </div>
     </div>
 
+    <!-- PAINEL ADMINISTRATIVO -->
     <main id="adminPanel" class="hidden admin-layout">
         <div class="container">
             <div class="admin-header-flex">
@@ -271,6 +277,7 @@
         </div>
     </main>
 
+    <!-- MODAL DE LOGIN ADMIN -->
     <div id="loginModal" class="modal hidden">
         <div class="modal-surface">
             <span class="close-modal" onclick="toggleAdminLogin()">&times;</span>
@@ -279,6 +286,7 @@
         </div>
     </div>
 
+    <!-- MODAL DE EDIÇÃO -->
     <div id="modalEditEscala" class="modal hidden">
         <div class="modal-surface">
             <span class="close-modal" onclick="fecharModalEdit()">&times;</span>
@@ -295,6 +303,7 @@
         </div>
     </div>
 
+    <!-- MODAL PIX -->
     <div id="modalPix" class="modal hidden">
         <div class="modal-surface text-center">
             <span class="close-modal" onclick="fecharModalPix()">&times;</span>
@@ -309,7 +318,9 @@
             <button onclick="copiarPix()" class="btn-accent w-100 mt-2">Copiar Chave Pix</button>
         </div>
     </div>
+    
     <div id="toast" class="toast hidden"></div>
+    
     <script src="script.js"></script>
 </body>
 </html>
