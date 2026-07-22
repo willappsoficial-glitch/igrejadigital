@@ -103,7 +103,6 @@ async function fetchData(action, params = {}) {
     }
 }
 
-// FUNÇÃO CORRIGIDA E UNIFICADA
 async function carregarDados() {
     // 1. Carrega Avisos
     const avisos = await fetchData('getAvisos');
@@ -656,7 +655,11 @@ function abrirDetalhesDept(nomeDept) {
     container.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p>Buscando membros...</p></div>';
 
     const todosMembros = JSON.parse(strDadosMembrosDept || "[]");
-    const membrosFiltrados = todosMembros.filter(m => m.departamento === nomeDept);
+    
+    const membrosFiltrados = todosMembros.filter(m => {
+        if (!m.departamento) return false;
+        return m.departamento.trim().toLowerCase() === nomeDept.trim().toLowerCase();
+    });
 
     if(membrosFiltrados.length === 0) {
         container.innerHTML = `<p class="text-center text-muted mt-4">Nenhum membro cadastrado neste departamento ainda.</p>`;
@@ -667,15 +670,20 @@ function abrirDetalhesDept(nomeDept) {
     membrosFiltrados.forEach(m => {
         let btnZap = '';
         if(m.telefone) {
+            let numLimpo = m.telefone.replace(/\D/g, '');
             let msgText = encodeURIComponent(`A Paz do Senhor, ${m.nome}!`);
-            btnZap = `<a href="https://wa.me/55${m.telefone}?text=${msgText}" target="_blank" class="icon-btn" style="color: #25d366; background: rgba(37, 211, 102, 0.1); padding: 10px; border-radius: 50%;">
+            btnZap = `<a href="https://wa.me/55${numLimpo}?text=${msgText}" target="_blank" class="icon-btn" style="color: #25d366; background: rgba(37, 211, 102, 0.1); padding: 10px; border-radius: 50%;">
                         <span class="material-icons-round">whatsapp</span>
                       </a>`;
         }
 
+        const fotoUrl = m.foto && m.foto.trim() !== "" 
+            ? m.foto 
+            : `https://ui-avatars.com/api/?name=${encodeURIComponent(m.nome)}&background=00a8e8&color=fff`;
+
         html += `
             <div class="app-card" style="display: flex; align-items: center; gap: 15px; padding: 12px 15px;">
-                <img src="${m.foto}" alt="${m.nome}" style="width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border);">
+                <img src="${fotoUrl}" alt="${m.nome}" style="width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border);">
                 <div style="flex: 1;">
                     <strong style="font-size: 1.05rem; display: block; color: var(--text-main); margin-bottom: 2px;">${m.nome}</strong>
                     <span style="font-size: 0.8rem; color: var(--text-muted); background: var(--bg-base); padding: 3px 8px; border-radius: 10px;">${nomeDept}</span>
