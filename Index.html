@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Igreja Digital - App</title>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Igreja Digital">
+    <link rel="apple-touch-icon" href="id.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#003366">
+</head>
+<body>
+    <div id="installBanner" class="install-banner hidden">
+        <div class="install-banner-content">
+            <img src="id.png" alt="Logo" class="install-logo">
+            <div class="install-text">
+                <strong>App Igreja Digital</strong>
+                <p id="installMessage">Adicione à tela inicial para acesso mais rápido!</p>
+            </div>
+        </div>
+        <button id="installBtn" class="btn-accent btn-sm" onclick="instalarApp()">Instalar</button>
+        <button id="closeInstallBtn" class="icon-btn" onclick="fecharBannerInstalacao()"><span class="material-icons-round">close</span></button>
+    </div>
+
+    <header class="topbar">
+        <div class="logo-area">
+            <img src="id.png" alt="Logo Igreja" class="logo-img"> 
+            <span class="brand-name">Igreja Digital</span>
+        </div>
+        <div class="topbar-actions">
+            <button id="themeToggleBtn" class="icon-btn" onclick="toggleDarkMode()" title="Tema Escuro/Claro">
+                <span class="material-icons-round" id="themeIcon">dark_mode</span>
+            </button>
+            <div id="userInfo" class="user-info hidden">
+                <span id="userNameDisplay" class="hide-mobile"></span>
+                <button onclick="sairMembro()" class="icon-btn" title="Sair"><span class="material-icons-round">logout</span></button>
+            </div>
+        </div>
+    </header>
+
+    <section id="loginSection" class="view-section active view-center">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>Bem-vindo</h2>
+                <p>Identifique-se para acessar</p>
+            </div>
+            <div class="input-group">
+                <span class="material-icons-round">person</span>
+                <input type="text" id="inputNome" placeholder="Seu Nome Completo">
+            </div>
+            <div class="input-group">
+                <span class="material-icons-round">email</span>
+                <input type="email" id="inputEmail" placeholder="Seu E-mail">
+            </div>
+            <button type="button" onclick="entrarMembro()" class="btn-primary w-100">Acessar Sistema</button>
+            
+            <div style="margin-top: 20px; text-align: center;">
+                <button onclick="toggleAdminLogin()" style="background: none; border: none; color: var(--text-muted); font-size: 0.85rem; text-decoration: underline; cursor: pointer; padding: 5px;">
+                    Acesso restrito à Liderança
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <main id="memberArea" class="hidden">
+        
+        <section id="tabAgenda" class="tab-content active">
+            <div class="container">
+                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 style="display: flex; align-items: center; gap: 8px;"><span class="material-icons-round text-primary">calendar_month</span> Agenda da Semana</h2>
+                    <button onclick="compartilharAgendaSemana()" class="icon-btn" style="color: var(--primary); background: var(--bg-base);" title="Compartilhar Agenda">
+                        <span class="material-icons-round">share</span>
+                    </button>
+                </div>
+                
+                <div class="versiculo-card">
+                    <div class="versiculo-header">
+                        <span class="material-icons-round" style="color: var(--accent-alt);">auto_stories</span>
+                        <span>Pão Diário</span>
+                    </div>
+                    <p id="textoVersiculo">"Carregando a Palavra..."</p>
+                    <small id="refVersiculo">-</small>
+                </div>
+
+                <div class="cards-list" id="tabelaEscalasBody">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                        <p>Buscando avisos...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tabMural" class="tab-content">
+            <div class="container">
+                <div id="boxAniversariantes" style="margin-bottom: 25px; display: none;">
+                    <div class="section-header" style="border-bottom:none; margin-bottom: 10px;">
+                        <h2 style="color: #db2777; font-size: 1.15rem;"><span class="material-icons-round">cake</span> Aniversariantes do Dia</h2>
+                    </div>
+                    <div id="listaAniversariantes" class="cards-list"></div>
+                </div>
+
+                <div class="section-header">
+                    <h2><span class="material-icons-round text-accent">campaign</span> Mural de Avisos</h2>
+                </div>
+                <div class="cards-list" id="avisosContainer">
+                    <div class="loading">Carregando avisos...</div>
+                </div>
+            </div>
+        </section>
+
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="switchTab('tabAgenda', this)">
+                <span class="material-icons-round">event_note</span><span>Escalas</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('tabMural', this)">
+                <span class="material-icons-round">notifications</span><span>Avisos</span>
+            </button>
+        </nav>
+    </main>
+
+    <main id="adminPanel" class="hidden admin-layout">
+        <div class="container">
+            <div class="admin-header-flex">
+                <h2>Painel Pastoral</h2>
+                <button onclick="logoutAdmin()" class="btn-outline-danger btn-sm">Sair</button>
+            </div>
+            <div class="dashboard-grid">
+                <div class="dash-card feature-card">
+                    <h3>Secretário IA</h3>
+                    <button type="button" class="btn-ia w-100" onclick="iniciarDitadoIA()"><span class="material-icons-round">mic</span> Ditar Escala</button>
+                    <p id="statusIA" class="status-msg"></p>
+                </div>
+                <div class="dash-card">
+                    <h3>Nova Escala</h3>
+                    <button onclick="repetirEscalaAnterior()" class="btn-outline-primary w-100" style="margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 5px;">
+                        <span class="material-icons-round" style="font-size: 18px;">content_copy</span> Repetir Semana Anterior
+                    </button>
+                    <div class="form-grid">
+                        <input type="date" id="dataEscala" class="input-modern">
+                        <input type="time" id="horaEscala" class="input-modern">
+                    </div>
+                    <input type="text" id="eventoEscala" placeholder="Evento" class="input-modern">
+                    <input type="text" id="dirigentesEscala" placeholder="Dirigentes" class="input-modern">
+                    <input type="text" id="porteirosEscala" placeholder="Porteiros" class="input-modern">
+                    <button onclick="adicionarItemEscala()" class="btn-outline-primary w-100">+ Adicionar</button>
+                    <div id="previewEscala" class="preview-box hidden">
+                        <ul id="listaPreview"></ul>
+                        <button onclick="submitEscalaSemana()" class="btn-primary w-100" id="btnPublicarTudo">Publicar Tudo</button>
+                    </div>
+                </div>
+                <div class="dash-card">
+                    <h3>Aviso</h3>
+                    <input type="text" id="tituloAviso" placeholder="Título" class="input-modern">
+                    <textarea id="msgAviso" placeholder="Mensagem..." rows="3" class="input-modern"></textarea>
+                    <button onclick="submitAviso()" class="btn-accent w-100">Enviar Aviso</button>
+                </div>
+            </div>
+            <div class="dash-card mt-4">
+                <h3>Gerenciar Publicados</h3>
+                <div class="table-responsive">
+                    <table class="table-modern">
+                        <thead><tr><th>Data</th><th>Evento</th><th>Equipe</th><th>Ações</th></tr></thead>
+                        <tbody id="tabelaEscalasAdminBody"><tr><td colspan="4">Carregando...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="loginModal" class="modal hidden">
+        <div class="modal-surface">
+            <span class="close-modal" onclick="toggleAdminLogin()">&times;</span>
+            <input type="password" id="adminPassword" placeholder="Senha Mestra" class="input-modern">
+            <button type="button" onclick="validarAdmin()" class="btn-primary w-100">Entrar</button>
+        </div>
+    </div>
+
+    <div id="modalEditEscala" class="modal hidden">
+        <div class="modal-surface">
+            <span class="close-modal" onclick="fecharModalEdit()">&times;</span>
+            <h3>Editar</h3>
+            <input type="hidden" id="edit-id"> 
+            <div class="form-grid mt-3">
+                <input type="date" id="edit-data" class="input-modern">
+                <input type="time" id="edit-hora" class="input-modern">
+            </div>
+            <input type="text" id="edit-evento" class="input-modern">
+            <input type="text" id="edit-dirigentes" class="input-modern">
+            <input type="text" id="edit-porteiros" class="input-modern">
+            <button onclick="salvarEdicaoEscala(event)" class="btn-primary w-100" id="btn-salvar-edicao">Salvar</button>
+        </div>
+    </div>
+
+    <div id="modalPix" class="modal hidden">
+        <div class="modal-surface text-center">
+            <span class="close-modal" onclick="fecharModalPix()">&times;</span>
+            <span class="material-icons-round" style="font-size: 40px; color: var(--accent-alt);">volunteer_activism</span>
+            <h3 style="margin-top: 10px;">Apoie o Desenvolvedor</h3>
+            
+            <p class="text-sm text-muted" style="margin: 15px 0; line-height: 1.5;">
+                A criação deste aplicativo foi uma doação da <strong>WillWeb Soluções Tecnológicas</strong>. A igreja arca apenas com os custos fixos de servidor e manutenção. Se esta ferramenta tem sido uma bênção e você deseja apoiar o desenvolvedor diretamente com uma contribuição pessoal e espontânea, sinta-se à vontade!
+            </p>
+
+            <div class="pix-key-box" id="chavePixTexto" style="font-size: 0.9rem; word-break: break-all;">3fe7ebb6-a140-4459-9800-0f7ed58da665</div>
+            <button onclick="copiarPix()" class="btn-accent w-100 mt-2">Copiar Chave Pix</button>
+        </div>
+    </div>
+    <div id="toast" class="toast hidden"></div>
+    <script src="script.js"></script>
+</body>
+</html>
