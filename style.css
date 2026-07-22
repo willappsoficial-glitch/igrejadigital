@@ -190,3 +190,85 @@ button { font-family: 'Inter', sans-serif; cursor: pointer; }
 .loading-spinner { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 0; color: var(--text-muted); font-size: 0.95rem; gap: 15px; }
 .spinner { width: 45px; height: 45px; border: 4px solid var(--border); border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* ======================================================== */
+/* CARDS DOS DEPARTAMENTOS E LÍDERES                        */
+/* ======================================================== */
+.dept-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+}
+
+.lider-img {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary);
+    background-color: var(--bg-base);
+}
+
+.dept-info h3 {
+    font-size: 1.15rem;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+.dept-info p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* ======================================================== */
+/* MODO DE IMPRESSÃO (ESCALA LIMPA)                         */
+/* ======================================================== */
+@media print {
+    /* Força fundo branco e texto preto na folha */
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    
+    /* Esconde tudo o que não interessa na impressão */
+    .topbar, .bottom-nav, #tabMural, #tabDept, #tabHistoria, 
+    #loginSection, .versiculo-card, .icon-btn, .install-banner, 
+    .toast, .modal, .section-header button {
+        display: none !important;
+    }
+
+    /* Garante que a agenda seja a única coisa visível */
+    #tabAgenda {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    /* Remove sombras e ajusta bordas para não gastar tinta */
+    .app-card {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        margin-bottom: 15px !important;
+        break-inside: avoid; /* Evita que o evento seja cortado no meio da página */
+    }
+
+    .dia-header {
+        color: black !important;
+        border-bottom: 2px solid #000 !important;
+    }
+
+    .evento-item.hoje {
+        border: 1px solid #ccc !important; /* Tira o efeito de piscar */
+        animation: none !important;
+    }
+    
+    .evento-titulo, .evento-equipe, .evento-hora {
+        color: black !important;
+    }
+
+    /* Tenta forçar a impressão de cores de borda/fundo se o navegador permitir */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
