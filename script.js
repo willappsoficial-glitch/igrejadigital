@@ -1,5 +1,10 @@
 const API_URL = 'https://script.google.com/macros/s/AKfycbwowZOp5zrgL7pqtrKkCQJDX7k8EkEoqdjfni-6v8gTV2ZIyL4NXA8O7jSz7PdgKNmc/exec'; 
 
+// Variáveis Globais de Memória
+let strDadosMural = "[]";
+let strDadosAgenda = "[]";
+let strDadosMembrosDept = "[]"; 
+
 window.onload = function() {
     initTheme();
     carregarVersiculo();
@@ -72,7 +77,7 @@ function iniciarDitadoIA() {
 }
 
 async function fetchData(action, params = {}) {
-    if (['getEscalas', 'getAvisos', 'getAniversariantesDia'].includes(action)) {
+    if (['getEscalas', 'getAvisos', 'getAniversariantesDia', 'getMembrosDepartamentos'].includes(action)) {
         try {
             const r = await fetch(`${API_URL}?action=${action}`);
             return await r.json();
@@ -98,14 +103,14 @@ async function fetchData(action, params = {}) {
     }
 }
 
-let strDadosMural = "[]";
-let strDadosAgenda = "[]";
-
+// FUNÇÃO CORRIGIDA E UNIFICADA
 async function carregarDados() {
+    // 1. Carrega Avisos
     const avisos = await fetchData('getAvisos');
     renderizarAvisos('avisosContainer', avisos);
     strDadosMural = JSON.stringify(avisos); 
     
+    // 2. Carrega Escalas (Agenda)
     const escalas = await fetchData('getEscalas');
     let filtradas = filtrarSemanaAtual(escalas);
     
@@ -125,8 +130,13 @@ async function carregarDados() {
     renderizarEscalaAdmin('tabelaEscalasAdminBody', filtradas);
     strDadosAgenda = JSON.stringify(filtradas); 
     
+    // 3. Carrega Aniversariantes
     const aniversariantes = await fetchData('getAniversariantesDia');
     renderizarAniversariantes(aniversariantes);
+
+    // 4. Carrega Membros dos Departamentos
+    const membrosDept = await fetchData('getMembrosDepartamentos');
+    strDadosMembrosDept = JSON.stringify(membrosDept);
 
     if (typeof verificarNotificacoes === 'function') {
         verificarNotificacoes();
@@ -145,13 +155,9 @@ function renderizarAniversariantes(lista) {
     box.style.display = 'block';
     container.innerHTML = '';
     
-    // Removi a verificação isAdmin para que TODOS os membros vejam o botão
-    
     lista.forEach(p => {
         let btnZap = '';
-        // Verifica apenas se o membro tem um telefone cadastrado na planilha
         if(p.telefone) {
-            // Mensagem amigável pré-programada para os irmãos enviarem
             let msgText = encodeURIComponent(`A Paz do Senhor, ${p.nome}! Vi no app da Igreja Digital que hoje é seu aniversário. Meus parabéns, que Deus te abençoe grandemente! 🎉`);
             
             btnZap = `<a href="https://wa.me/55${p.telefone}?text=${msgText}" target="_blank" style="background:#25d366; text-decoration:none; display:inline-flex; align-items:center; gap:6px; color:white; padding: 8px 14px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; transition: 0.2s; box-shadow: 0 2px 5px rgba(37, 211, 102, 0.3);">
@@ -642,38 +648,14 @@ function repetirEscalaAnterior() {
     showToast("Escala copiada! Você pode apagar eventos indesejados no 'X' antes de publicar.");
 }
 
-
-// Variável global para armazenar a lista na memória do celular
-let strDadosMembrosDept = "[]"; 
-
-// 1. Modifique a sua função carregarDados() existente para incluir o download dessa lista:
-async function carregarDados() {
-    // ... os outros downloads já existentes continuam aqui ...
-
-    // NOVO: Faz o download silencioso dos membros dos departamentos
-    const membrosDept = await fetchData('getMembrosDepartamentos');
-    strDadosMembrosDept = JSON.stringify(membrosDept);
-
-    if (typeof verificarNotificacoes === 'function') {
-        verificarNotificacoes();
-    }
-}
-
-// 2. Adicione estas duas novas funções no final do arquivo:
 function abrirDetalhesDept(nomeDept) {
-    // Altera o título da janela
     document.getElementById('tituloDept').innerText = nomeDept;
-    
-    // Mostra a tela por cima de tudo
     document.getElementById('viewDeptDetalhes').classList.remove('hidden');
     
     const container = document.getElementById('listaMembrosDept');
     container.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p>Buscando membros...</p></div>';
 
-    // Lê a lista da memória do celular
     const todosMembros = JSON.parse(strDadosMembrosDept || "[]");
-    
-    // Filtra apenas os irmãos que pertencem ao departamento clicado
     const membrosFiltrados = todosMembros.filter(m => m.departamento === nomeDept);
 
     if(membrosFiltrados.length === 0) {
@@ -681,7 +663,6 @@ function abrirDetalhesDept(nomeDept) {
         return;
     }
 
-    // Desenha os cards dos irmãos na tela
     let html = '';
     membrosFiltrados.forEach(m => {
         let btnZap = '';
