@@ -17,7 +17,7 @@
 <body>
     <div id="installBanner" class="install-banner hidden">
         <div class="install-banner-content">
-            <img src="logo.png" alt="Logo" class="install-logo">
+            <img src="id.png" alt="Logo" class="install-logo">
             <div class="install-text">
                 <strong>App Igreja Digital</strong>
                 <p id="installMessage">Adicione à tela inicial para acesso mais rápido!</p>
@@ -29,7 +29,7 @@
 
     <header class="topbar">
         <div class="logo-area">
-            <img src="logo.png" alt="Logo Igreja" class="logo-img"> 
+            <img src="id.png" alt="Logo Igreja" class="logo-img"> 
             <span class="brand-name">Igreja Digital</span>
         </div>
         <div class="topbar-actions">
@@ -131,7 +131,7 @@
                 <div class="cards-list">
                     
                     <!-- Departamento Infantil -->
-                    <div class="app-card dept-card">
+                    <div class="app-card dept-card" onclick="abrirDetalhesDept('Infantil')">
                         <img src="foto-infantil.jpg" alt="Líder Infantil" class="lider-img" onerror="this.src='https://ui-avatars.com/api/?name=Infantil&background=00a8e8&color=fff'">
                         <div class="dept-info">
                             <h3>Ministério Infantil</h3>
@@ -140,7 +140,7 @@
                     </div>
 
                     <!-- Departamento de Senhoras -->
-                    <div class="app-card dept-card">
+                    <div class="app-card dept-card" onclick="abrirDetalhesDept('Senhoras')">
                         <img src="foto-senhoras.jpg" alt="Líder Senhoras" class="lider-img" onerror="this.src='https://ui-avatars.com/api/?name=Senhoras&background=00a8e8&color=fff'">
                         <div class="dept-info">
                             <h3>Círculo de Oração</h3>
@@ -149,7 +149,7 @@
                     </div>
 
                     <!-- Departamento de Senhores -->
-                    <div class="app-card dept-card">
+                    <div class="app-card dept-card" onclick="abrirDetalhesDept('Senhores')">
                         <img src="foto-senhores.jpg" alt="Líder Senhores" class="lider-img" onerror="this.src='https://ui-avatars.com/api/?name=Senhores&background=00a8e8&color=fff'">
                         <div class="dept-info">
                             <h3>Senhores (Varões)</h3>
@@ -158,7 +158,7 @@
                     </div>
 
                     <!-- Departamento de Jovens -->
-                    <div class="app-card dept-card">
+                    <div class="app-card dept-card" onclick="abrirDetalhesDept('Jovens')">
                         <img src="foto-jovens.jpg" alt="Líder Jovens" class="lider-img" onerror="this.src='https://ui-avatars.com/api/?name=Jovens&background=00a8e8&color=fff'">
                         <div class="dept-info">
                             <h3>Mocidade (Jovens)</h3>
@@ -208,6 +208,20 @@
             </button>
         </nav>
     </main>
+
+    <!-- TELA DE DETALHES DO DEPARTAMENTO (ABRE POR CIMA) -->
+    <div id="viewDeptDetalhes" class="view-section hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg-base); z-index:2000; overflow-y:auto; padding-bottom: 80px;">
+        <div class="topbar" style="position: sticky; top: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+            <button onclick="fecharDetalhesDept()" class="icon-btn" style="color: var(--text-main);"><span class="material-icons-round">arrow_back</span></button>
+            <h2 id="tituloDept" style="font-size: 1.2rem; flex: 1; text-align: center; margin-right: 40px; color: var(--primary);">Departamento</h2>
+        </div>
+        <div class="container">
+            <div id="listaMembrosDept" class="cards-list">
+                <!-- A lista de irmãos entra aqui via JavaScript -->
+            </div>
+        </div>
+    </div>
+
     <main id="adminPanel" class="hidden admin-layout">
         <div class="container">
             <div class="admin-header-flex">
