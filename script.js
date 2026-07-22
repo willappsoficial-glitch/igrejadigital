@@ -145,27 +145,31 @@ function renderizarAniversariantes(lista) {
     box.style.display = 'block';
     container.innerHTML = '';
     
-    const isAdmin = localStorage.getItem('churchAdminPass') !== null;
+    // Removi a verificação isAdmin para que TODOS os membros vejam o botão
     
     lista.forEach(p => {
         let btnZap = '';
-        if(isAdmin && p.telefone) {
-            let msgText = encodeURIComponent(`A Paz do Senhor, ${p.nome}! A liderança da Igreja deseja um Feliz Aniversário! Que Deus te abençoe grandemente.`);
-            btnZap = `<a href="https://wa.me/55${p.telefone}?text=${msgText}" target="_blank" class="btn-tiny" style="background:#25d366; text-decoration:none; display:inline-flex; align-items:center; gap:5px; color:white; padding: 6px 12px; border-radius: 20px;"><span class="material-icons-round" style="font-size:16px">chat</span> Enviar Zap</a>`;
+        // Verifica apenas se o membro tem um telefone cadastrado na planilha
+        if(p.telefone) {
+            // Mensagem amigável pré-programada para os irmãos enviarem
+            let msgText = encodeURIComponent(`A Paz do Senhor, ${p.nome}! Vi no app da Igreja Digital que hoje é seu aniversário. Meus parabéns, que Deus te abençoe grandemente! 🎉`);
+            
+            btnZap = `<a href="https://wa.me/55${p.telefone}?text=${msgText}" target="_blank" style="background:#25d366; text-decoration:none; display:inline-flex; align-items:center; gap:6px; color:white; padding: 8px 14px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; transition: 0.2s; box-shadow: 0 2px 5px rgba(37, 211, 102, 0.3);">
+                        <span class="material-icons-round" style="font-size:18px">chat</span> Dar Parabéns
+                      </a>`;
         }
         
         container.innerHTML += `
-            <div class="app-card" style="padding:15px; display:flex; justify-content:space-between; align-items:center;">
+            <div class="app-card" style="padding:15px; display:flex; justify-content:space-between; align-items:center; border-left: 4px solid #db2777;">
                 <div>
                     <strong style="font-size:1.1rem; color:var(--text-main);">${p.nome}</strong>
-                    <p class="text-sm text-muted">Ficando mais experiente hoje! 🎉</p>
+                    <p class="text-sm text-muted">Ficando mais experiente hoje! 🎂</p>
                 </div>
                 ${btnZap}
             </div>
         `;
     });
 }
-
 function renderizarEscalaAdmin(id, dados) {
     const tbody = document.getElementById(id);
     if (!tbody) return; tbody.innerHTML = "";
