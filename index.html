@@ -69,13 +69,20 @@
 
     <main id="memberArea" class="hidden">
         
+        <!-- ABA 1: AGENDA -->
         <section id="tabAgenda" class="tab-content active">
             <div class="container">
                 <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
-                    <h2 style="display: flex; align-items: center; gap: 8px;"><span class="material-icons-round text-primary">calendar_month</span> Agenda da Semana</h2>
-                    <button onclick="compartilharAgendaSemana()" class="icon-btn" style="color: var(--primary); background: var(--bg-base);" title="Compartilhar Agenda">
-                        <span class="material-icons-round">share</span>
-                    </button>
+                    <h2 style="display: flex; align-items: center; gap: 8px;"><span class="material-icons-round text-primary">calendar_month</span> Agenda</h2>
+                    <div style="display: flex; gap: 5px;">
+                        <!-- Botão de Imprimir -->
+                        <button onclick="window.print()" class="icon-btn" style="color: var(--primary); background: var(--bg-base);" title="Imprimir Escala">
+                            <span class="material-icons-round">print</span>
+                        </button>
+                        <button onclick="compartilharAgendaSemana()" class="icon-btn" style="color: var(--primary); background: var(--bg-base);" title="Compartilhar Agenda">
+                            <span class="material-icons-round">share</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="versiculo-card">
@@ -96,6 +103,7 @@
             </div>
         </section>
 
+        <!-- ABA 2: MURAL DE AVISOS -->
         <section id="tabMural" class="tab-content">
             <div class="container">
                 <div id="boxAniversariantes" style="margin-bottom: 25px; display: none;">
@@ -114,6 +122,77 @@
             </div>
         </section>
 
+        <!-- ABA 3: DEPARTAMENTOS -->
+        <section id="tabDept" class="tab-content">
+            <div class="container">
+                <div class="section-header">
+                    <h2><span class="material-icons-round text-primary">groups</span> Departamentos</h2>
+                </div>
+                <div class="cards-list">
+                    
+                    <!-- Departamento Infantil -->
+                    <div class="app-card dept-card">
+                        <img src="foto-infantil.jpg" alt="Líder Infantil" class="lider-img" onerror="this.src='https://ui-avatars.com/api/?name=Infantil&background=00a8e8&color=fff'">
+                        <div class="dept-info">
+                            <h3>Ministério Infantil</h3>
+                            <p><strong>Dirigente:</strong> Nome do(a) Líder</p>
+                        </div>
+                    </div>
+
+                    <!-- Departamento de Senhoras -->
+                    <div class="app-card dept-card">
+                        <img src="foto-senhoras.jpg" alt="Líder Senhoras" class="lider-img" onerror="this.src='https://ui-avatars.com/api/?name=Senhoras&background=00a8e8&color=fff'">
+                        <div class="dept-info">
+                            <h3>Círculo de Oração</h3>
+                            <p><strong>Dirigente:</strong> Nome da Líder</p>
+                        </div>
+                    </div>
+
+                    <!-- Departamento de Senhores -->
+                    <div class="app-card dept-card">
+                        <img src="foto-senhores.jpg" alt="Líder Senhores" class="lider-img" onerror="this.src='https://ui-avatars.com/api/?name=Senhores&background=00a8e8&color=fff'">
+                        <div class="dept-info">
+                            <h3>Senhores (Varões)</h3>
+                            <p><strong>Dirigente:</strong> Nome do Líder</p>
+                        </div>
+                    </div>
+
+                    <!-- Departamento de Jovens -->
+                    <div class="app-card dept-card">
+                        <img src="foto-jovens.jpg" alt="Líder Jovens" class="lider-img" onerror="this.src='https://ui-avatars.com/api/?name=Jovens&background=00a8e8&color=fff'">
+                        <div class="dept-info">
+                            <h3>Mocidade (Jovens)</h3>
+                            <p><strong>Dirigente:</strong> Nome do(a) Líder</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA 4: HISTÓRIA -->
+        <section id="tabHistoria" class="tab-content">
+            <div class="container">
+                <div class="section-header">
+                    <h2><span class="material-icons-round text-primary">history_edu</span> Nossa História</h2>
+                </div>
+                <div class="app-card">
+                    <!-- Foto da Igreja Antiga / Construção / Evento Histórico -->
+                    <img src="foto-igreja.jpg" alt="História da Igreja" style="width: 100%; border-radius: var(--radius-md); margin-bottom: 15px; object-fit: cover; max-height: 250px; background: var(--bg-base);">
+                    
+                    <h3 style="color: var(--primary); margin-bottom: 10px;">Como Tudo Começou</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 15px; text-align: justify;">
+                        A história da nossa congregação começou com um pequeno grupo de irmãos sedentos pela palavra de Deus. Ao longo dos anos, passamos por diversas lutas e vitórias, sempre firmados na promessa de Cristo.
+                    </p>
+                    
+                    <p style="color: var(--text-muted); line-height: 1.6; text-align: justify;">
+                        Hoje, a Igreja Digital continua seu legado de expandir o Reino, abraçando a comunidade e levando salvação a quem precisa, utilizando até mesmo a tecnologia para conectar nosso povo.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- NAVEGAÇÃO INFERIOR ATUALIZADA -->
         <nav class="bottom-nav">
             <button class="nav-item active" onclick="switchTab('tabAgenda', this)">
                 <span class="material-icons-round">event_note</span><span>Escalas</span>
@@ -121,9 +200,14 @@
             <button class="nav-item" onclick="switchTab('tabMural', this)">
                 <span class="material-icons-round">notifications</span><span>Avisos</span>
             </button>
+            <button class="nav-item" onclick="switchTab('tabDept', this)">
+                <span class="material-icons-round">groups</span><span>Grupos</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('tabHistoria', this)">
+                <span class="material-icons-round">history_edu</span><span>História</span>
+            </button>
         </nav>
     </main>
-
     <main id="adminPanel" class="hidden admin-layout">
         <div class="container">
             <div class="admin-header-flex">
