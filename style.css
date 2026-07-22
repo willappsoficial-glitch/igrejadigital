@@ -272,3 +272,15 @@ button { font-family: 'Inter', sans-serif; cursor: pointer; }
         print-color-adjust: exact !important;
     }
 }
+
+/* Efeito de clique nos cards de Departamento */
+.dept-card {
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.dept-card:hover, .dept-card:active {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    box-shadow: 0 6px 12px -2px rgba(0,0,0,0.1);
+}
