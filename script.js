@@ -1,4 +1,4 @@
-const API_URL = ''; 
+const API_URL = 'https://script.google.com/macros/s/AKfycbwowZOp5zrgL7pqtrKkCQJDX7k8EkEoqdjfni-6v8gTV2ZIyL4NXA8O7jSz7PdgKNmc/exec'; 
 
 window.onload = function() {
     initTheme();
