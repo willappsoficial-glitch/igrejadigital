@@ -652,46 +652,80 @@ function abrirDetalhesDept(nomeDept) {
     document.getElementById('viewDeptDetalhes').classList.remove('hidden');
     
     const container = document.getElementById('listaMembrosDept');
-    container.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p>Buscando membros...</p></div>';
+    container.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p>Buscando dados...</p></div>';
 
+    // Busca os dados da memória
     const todosMembros = JSON.parse(strDadosMembrosDept || "[]");
     
+    // Filtra pelo departamento clicado
     const membrosFiltrados = todosMembros.filter(m => {
         if (!m.departamento) return false;
         return m.departamento.trim().toLowerCase() === nomeDept.trim().toLowerCase();
     });
 
     if(membrosFiltrados.length === 0) {
-        container.innerHTML = `<p class="text-center text-muted mt-4">Nenhum membro cadastrado neste departamento ainda.</p>`;
+        container.innerHTML = `<p class="text-center text-muted mt-4">Nenhum registro encontrado neste departamento.</p>`;
         return;
     }
 
+    // Separa quem é Dirigente/Líder de quem é Membro comum
+    const dirigentes = membrosFiltrados.filter(m => m.cargo.toLowerCase().includes('dirigente') || m.cargo.toLowerCase().includes('líder'));
+    const membros = membrosFiltrados.filter(m => !m.cargo.toLowerCase().includes('dirigente') && !m.cargo.toLowerCase().includes('líder'));
+
     let html = '';
-    membrosFiltrados.forEach(m => {
+
+    // Função interna para desenhar o card de cada pessoa
+    const renderizarCard = (m, isLider) => {
         let btnZap = '';
         if(m.telefone) {
             let numLimpo = m.telefone.replace(/\D/g, '');
             let msgText = encodeURIComponent(`A Paz do Senhor, ${m.nome}!`);
-            btnZap = `<a href="https://wa.me/55${numLimpo}?text=${msgText}" target="_blank" class="icon-btn" style="color: #25d366; background: rgba(37, 211, 102, 0.1); padding: 10px; border-radius: 50%;">
+            btnZap = `<a href="https://wa.me/55${numLimpo}?text=${msgText}" target="_blank" class="icon-btn" style="color: #25d366; background: rgba(37, 211, 102, 0.1); padding: 10px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                         <span class="material-icons-round">whatsapp</span>
                       </a>`;
         }
 
-        const fotoUrl = m.foto && m.foto.trim() !== "" 
-            ? m.foto 
-            : `https://ui-avatars.com/api/?name=${encodeURIComponent(m.nome)}&background=00a8e8&color=fff`;
+        // Estilização condicional (Líder recebe destaque nas cores)
+        const corBordaFoto = isLider ? 'var(--accent)' : 'var(--border)';
+        const bgBadge = isLider ? 'var(--accent)' : 'var(--bg-base)';
+        const corTextoBadge = isLider ? '#ffffff' : 'var(--text-muted)';
 
-        html += `
-            <div class="app-card" style="display: flex; align-items: center; gap: 15px; padding: 12px 15px;">
-                <img src="${fotoUrl}" alt="${m.nome}" style="width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border);">
+        return `
+            <div class="app-card" style="display: flex; align-items: center; gap: 15px; padding: 12px 15px; margin-bottom: 12px;">
+                <img src="${m.foto}" alt="${m.nome}" style="width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid ${corBordaFoto};">
                 <div style="flex: 1;">
-                    <strong style="font-size: 1.05rem; display: block; color: var(--text-main); margin-bottom: 2px;">${m.nome}</strong>
-                    <span style="font-size: 0.8rem; color: var(--text-muted); background: var(--bg-base); padding: 3px 8px; border-radius: 10px;">${nomeDept}</span>
+                    <strong style="font-size: 1.05rem; display: block; color: var(--text-main); margin-bottom: 4px;">${m.nome}</strong>
+                    <span style="font-size: 0.75rem; font-weight: 600; color: ${corTextoBadge}; background: ${bgBadge}; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px;">${m.cargo}</span>
                 </div>
                 ${btnZap}
             </div>
         `;
-    });
+    };
+
+    // Monta a seção da Liderança
+    if (dirigentes.length > 0) {
+        html += `
+            <div style="margin-bottom: 25px;">
+                <h3 style="font-size: 0.95rem; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                    <span class="material-icons-round" style="font-size: 18px; color: var(--accent);">star</span> Liderança
+                </h3>
+                ${dirigentes.map(m => renderizarCard(m, true)).join('')}
+            </div>
+        `;
+    }
+
+    // Monta a seção dos Membros
+    if (membros.length > 0) {
+        html += `
+            <div>
+                <h3 style="font-size: 0.95rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                    <span class="material-icons-round" style="font-size: 18px;">people</span> Membros
+                </h3>
+                ${membros.map(m => renderizarCard(m, false)).join('')}
+            </div>
+        `;
+    }
+
     container.innerHTML = html;
 }
 
