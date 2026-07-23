@@ -649,7 +649,11 @@ function repetirEscalaAnterior() {
 
 function abrirDetalhesDept(nomeDept) {
     document.getElementById('tituloDept').innerText = nomeDept;
-    document.getElementById('viewDeptDetalhes').classList.remove('hidden');
+    
+    // --- CORREÇÃO AQUI: Adicionando a classe 'active' além de remover a 'hidden' ---
+    const painelDetalhes = document.getElementById('viewDeptDetalhes');
+    painelDetalhes.classList.remove('hidden');
+    painelDetalhes.classList.add('active'); 
     
     const container = document.getElementById('listaMembrosDept');
     container.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p>Buscando dados...</p></div>';
@@ -730,5 +734,8 @@ function abrirDetalhesDept(nomeDept) {
 }
 
 function fecharDetalhesDept() {
-    document.getElementById('viewDeptDetalhes').classList.add('hidden');
+    const painelDetalhes = document.getElementById('viewDeptDetalhes');
+    painelDetalhes.classList.add('hidden');
+    // --- CORREÇÃO AQUI: Removendo a classe 'active' ao fechar ---
+    painelDetalhes.classList.remove('active'); 
 }
